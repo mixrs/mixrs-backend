@@ -18,8 +18,9 @@ type Service struct {
 
 func (s *Service) CreateChannel(channel *models.CreateChannelDTO) (string, error) {
 	newChannel := &models.ChannelModel{
-		ID:    uuid.NewV4().String(),
-		Title: channel.Title,
+		ID:          uuid.NewV4().String(),
+		Title:       channel.Title,
+		Description: channel.Description,
 	}
 
 	channelId, err := s.Dbo.CreateChannel(newChannel)
@@ -37,8 +38,9 @@ func (s *Service) GetChannel(id string) (*models.ChannelDTO, error) {
 	}
 
 	return &models.ChannelDTO{
-		ID:    fetchedChannel.ID,
-		Title: fetchedChannel.Title,
+		ID:          fetchedChannel.ID,
+		Title:       fetchedChannel.Title,
+		Description: fetchedChannel.Description,
 	}, nil
 }
 
@@ -51,8 +53,9 @@ func (s *Service) GetChannels() ([]*models.ChannelDTO, error) {
 	var res []*models.ChannelDTO
 	for _, v := range channels {
 		item := &models.ChannelDTO{
-			ID:    v.ID,
-			Title: v.Title,
+			ID:          v.ID,
+			Title:       v.Title,
+			Description: v.Description,
 		}
 
 		res = append(res, item)

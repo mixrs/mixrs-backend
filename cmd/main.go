@@ -9,6 +9,7 @@ import (
 	"github.com/Tak1za/mixr/pkg/models"
 	"github.com/Tak1za/mixr/pkg/post"
 	"github.com/Tak1za/mixr/pkg/user"
+	"github.com/gin-contrib/cors"
 
 	"github.com/gin-gonic/gin"
 )
@@ -27,6 +28,7 @@ func inject(conn *dbaccess.Env) *gin.Engine {
 	}
 
 	router := gin.Default()
+	router.Use(cors.Default())
 
 	handler.NewHandler(&handler.Config{
 		R:                 router,

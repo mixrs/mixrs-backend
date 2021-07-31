@@ -2,28 +2,29 @@ package models
 
 import (
 	"time"
-
-	"gorm.io/gorm"
 )
 
 type ChannelModel struct {
-	gorm.Model
-	ID    string `gorm:"primaryKey;column:id"`
-	Title string `gorm:"column:title"`
+	ID          string `gorm:"primaryKey;column:id"`
+	Title       string `gorm:"column:title"`
+	Description string `gorm:"column:description"`
 }
 
 type CreateChannelDTO struct {
-	Title string `json:"title" binding:"required"`
+	Title       string `json:"title" binding:"required"`
+	Description string `json:"description"`
 }
 
 type ChannelDTO struct {
-	ID    string `json:"id"`
-	Title string `json:"title"`
+	ID          string `json:"id"`
+	Title       string `json:"title"`
+	Description string `json:"description"`
 }
 
 type FetchChannelModel struct {
-	ID        string    `gorm:"column:id"`
-	Title     string    `gorm:"column:title"`
-	CreatedAt time.Time `gorm:"column:created_at"`
-	UpdatedAt time.Time `gorm:"column:updated_at"`
+	ID          string    `gorm:"column:id"`
+	Title       string    `gorm:"column:title"`
+	Description string    `gorm:"column:description"`
+	CreatedAt   time.Time `gorm:"column:created_at"`
+	UpdatedAt   time.Time `gorm:"column:updated_at"`
 }

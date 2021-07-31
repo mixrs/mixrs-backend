@@ -7,21 +7,22 @@ import (
 )
 
 type Operations interface {
-	CreatePost(post *models.CreatePostDTO) (string, error)
+	CreatePost(post *models.CreatePostDTO, channelId string) (string, error)
 	GetPosts(channelId string) ([]*models.PostDTO, error)
+	GetPostById(channelId, postId string) (*models.PostDTO, error)
 }
 
 type Service struct {
 	Dbo dbaccess.Operations
 }
 
-func (s *Service) CreatePost(post *models.CreatePostDTO) (string, error) {
+func (s *Service) CreatePost(post *models.CreatePostDTO, channelId string) (string, error) {
 	newPost := &models.PostModel{
 		ID:        uuid.NewV4().String(),
 		Title:     post.Title,
 		Content:   post.Content,
 		UserID:    post.UserID,
-		ChannelID: post.ChannelID,
+		ChannelID: channelId,
 	}
 
 	postId, err := s.Dbo.CreatePost(newPost)
@@ -65,4 +66,35 @@ func (s *Service) GetPosts(channelId string) ([]*models.PostDTO, error) {
 	}
 
 	return res, nil
+}
+
+func (s *Service) GetPostById(channelId, postId string) (*models.PostDTO, error) {
+	post, err := s.Dbo.GetPostById(channelId, postId)
+	if err != nil {
+		return nil, err
+	}
+
+	if post == nil {
+		return &models.PostDTO{}, nil
+	}
+
+	item := &models.PostDTO{
+		ID:        post.ID,
+		Title:     post.Title,
+		Content:   post.Content,
+		UpdatedAt: post.UpdatedAt,
+		CreatedAt: post.CreatedAt,
+		Channel: &models.ChannelDTO{
+			ID:          post.ChannelID,
+			Title:       post.ChannelTitle,
+			Description: post.ChannelDescription,
+		},
+		User: &models.UserDTO{
+			ID:    post.UserID,
+			Name:  post.UserName,
+			Email: post.UserEmail,
+		},
+	}
+
+	return item, nil
 }

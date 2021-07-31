@@ -17,7 +17,9 @@ func (h *Handler) CreatePost(c *gin.Context) {
 		return
 	}
 
-	postId, err := h.PostOperations.CreatePost(&post)
+	channelId := c.Param("channelId")
+
+	postId, err := h.PostOperations.CreatePost(&post, channelId)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -35,4 +37,16 @@ func (h *Handler) GetPosts(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusCreated, gin.H{"data": posts})
+}
+
+func (h *Handler) GetPostById(c *gin.Context) {
+	channelId := c.Param("channelId")
+	postId := c.Param("postId")
+	post, err := h.PostOperations.GetPostById(channelId, postId)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"data": post})
 }

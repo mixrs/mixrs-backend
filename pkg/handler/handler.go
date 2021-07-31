@@ -34,10 +34,10 @@ func NewHandler(c *Config) {
 	g.PUT("/users/:userId", h.UpdateUser)
 	g.DELETE("/users/:userId", h.DeleteUser)
 
-	g.POST("/posts", h.CreatePost)
-	g.GET("/posts/channels/:channelId", h.GetPosts)
-
+	g.POST("/channels/:channelId/posts", h.CreatePost)
 	g.POST("/channels", h.CreateChannel)
 	g.GET("/channels/:channelId", h.GetChannel)
 	g.GET("/channels", h.GetChannels)
+	g.GET("/channels/:channelId/posts", h.GetPosts)
+	g.GET("/channels/:channelId/posts/:postId", h.GetPostById)
 }
