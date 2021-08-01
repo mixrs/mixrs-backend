@@ -4,6 +4,7 @@ import (
 	"log"
 
 	"github.com/Tak1za/mixr/pkg/channel"
+	"github.com/Tak1za/mixr/pkg/comment"
 	"github.com/Tak1za/mixr/pkg/dbaccess"
 	"github.com/Tak1za/mixr/pkg/handler"
 	"github.com/Tak1za/mixr/pkg/models"
@@ -27,6 +28,10 @@ func inject(conn *dbaccess.Env) *gin.Engine {
 		Dbo: conn,
 	}
 
+	commentOperations := &comment.Service{
+		Dbo: conn,
+	}
+
 	router := gin.Default()
 	router.Use(cors.Default())
 
@@ -35,6 +40,7 @@ func inject(conn *dbaccess.Env) *gin.Engine {
 		UserOperations:    userOperations,
 		PostOperations:    postOperations,
 		ChannelOperations: channelOperations,
+		CommentOperations: commentOperations,
 	})
 
 	return router
@@ -49,6 +55,7 @@ func main() {
 	conn.DB.AutoMigrate(&models.UserModel{})
 	conn.DB.AutoMigrate(&models.PostModel{})
 	conn.DB.AutoMigrate(&models.ChannelModel{})
+	conn.DB.AutoMigrate(&models.CommentModel{})
 
 	r := inject(conn)
 

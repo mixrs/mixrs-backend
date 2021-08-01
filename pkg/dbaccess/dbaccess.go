@@ -11,6 +11,7 @@ type Operations interface {
 	UserRepository
 	PostRepository
 	ChannelRepository
+	CommentRepository
 }
 
 type Env struct {
