@@ -1,6 +1,8 @@
 package user
 
 import (
+	"encoding/base64"
+
 	"github.com/Tak1za/mixr/pkg/dbaccess"
 	"github.com/Tak1za/mixr/pkg/models"
 	uuid "github.com/satori/go.uuid"
@@ -23,10 +25,13 @@ func (s *Service) GetUser(id string) (*models.UserDTO, error) {
 		return nil, err
 	}
 
+	encodedImage := base64.StdEncoding.EncodeToString(fetchedUser.Image)
+
 	return &models.UserDTO{
 		Name:  fetchedUser.Name,
 		ID:    fetchedUser.ID,
 		Email: fetchedUser.Email,
+		Image: encodedImage,
 	}, nil
 }
 
@@ -35,6 +40,7 @@ func (s *Service) CreateUser(toCreateUser *models.CreateUserDTO) (string, error)
 		ID:    uuid.NewV4().String(),
 		Name:  toCreateUser.Name,
 		Email: toCreateUser.Email,
+		Image: toCreateUser.Image,
 	}
 
 	userId, err := s.Dbo.CreateUser(newUser)

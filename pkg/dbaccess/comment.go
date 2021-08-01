@@ -25,7 +25,7 @@ func (e *Env) CreateComment(comment *models.CommentModel) (string, error) {
 func (e *Env) GetComments(postId string) ([]*models.FetchCommentModel, error) {
 	var res []*models.FetchCommentModel
 
-	if err := e.DB.Model(&models.CommentModel{}).Select("comment_models.id, comment_models.value, comment_models.created_at, comment_models.deleted_at, user_models.id as user_id, user_models.name as user_name, user_models.email as user_email").Joins("inner join user_models on comment_models.user_id = user_models.id").Order("created_at desc").Where("comment_models.post_id = ?", postId).Find(&res).Error; err != nil {
+	if err := e.DB.Model(&models.CommentModel{}).Select("comment_models.id, comment_models.value, comment_models.created_at, comment_models.deleted_at, user_models.id as user_id, user_models.name as user_name, user_models.email as user_email, user_models.image as user_image").Joins("inner join user_models on comment_models.user_id = user_models.id").Order("created_at desc").Where("comment_models.post_id = ?", postId).Find(&res).Error; err != nil {
 		log.Println(err.Error())
 		return nil, fmt.Errorf("error occured while getting all comments on post with id: %s", postId)
 	}

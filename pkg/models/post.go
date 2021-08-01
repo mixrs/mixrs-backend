@@ -42,4 +42,5 @@ type FetchPostModel struct {
 	UserID             string    `gorm:"column:user_id"`
 	UserName           string    `gorm:"column:user_name"`
 	UserEmail          string    `gorm:"column:user_email"`
+	UserImage          []byte    `gorm:"column:user_image"`
 }

@@ -1,9 +1,5 @@
 package models
 
-import (
-	"time"
-)
-
 type ChannelModel struct {
 	ID          string `gorm:"primaryKey;column:id"`
 	Title       string `gorm:"column:title"`
@@ -22,9 +18,7 @@ type ChannelDTO struct {
 }
 
 type FetchChannelModel struct {
-	ID          string    `gorm:"column:id"`
-	Title       string    `gorm:"column:title"`
-	Description string    `gorm:"column:description"`
-	CreatedAt   time.Time `gorm:"column:created_at"`
-	UpdatedAt   time.Time `gorm:"column:updated_at"`
+	ID          string `gorm:"column:id"`
+	Title       string `gorm:"column:title"`
+	Description string `gorm:"column:description"`
 }

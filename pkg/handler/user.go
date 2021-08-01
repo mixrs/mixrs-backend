@@ -1,6 +1,8 @@
 package handler
 
 import (
+	"bytes"
+	"io"
 	"log"
 	"net/http"
 
@@ -20,12 +22,33 @@ func (h *Handler) GetUser(c *gin.Context) {
 }
 
 func (h *Handler) CreateUser(c *gin.Context) {
-	var user models.CreateUserDTO
-
-	if err := c.ShouldBindJSON(&user); err != nil {
+	userName := c.PostForm("name")
+	userEmail := c.PostForm("email")
+	userImage, err := c.FormFile("image")
+	if err != nil {
 		log.Println(err)
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
+	}
+	file, err := userImage.Open()
+	if err != nil {
+		log.Println(err)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	defer file.Close()
+
+	buf := bytes.NewBuffer(nil)
+	if _, err := io.Copy(buf, file); err != nil {
+		log.Println(err)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	user := models.CreateUserDTO{
+		Name:  userName,
+		Email: userEmail,
+		Image: buf.Bytes(),
 	}
 
 	userId, err := h.UserOperations.CreateUser(&user)

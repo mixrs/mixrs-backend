@@ -1,6 +1,8 @@
 package post
 
 import (
+	"encoding/base64"
+
 	"github.com/Tak1za/mixr/pkg/dbaccess"
 	"github.com/Tak1za/mixr/pkg/models"
 	uuid "github.com/satori/go.uuid"
@@ -59,6 +61,7 @@ func (s *Service) GetPosts(channelId string) ([]*models.PostDTO, error) {
 				ID:    v.UserID,
 				Name:  v.UserName,
 				Email: v.UserEmail,
+				Image: base64.StdEncoding.EncodeToString(v.UserImage),
 			},
 		}
 
@@ -93,6 +96,7 @@ func (s *Service) GetPostById(channelId, postId string) (*models.PostDTO, error)
 			ID:    post.UserID,
 			Name:  post.UserName,
 			Email: post.UserEmail,
+			Image: base64.StdEncoding.EncodeToString(post.UserImage),
 		},
 	}
 
