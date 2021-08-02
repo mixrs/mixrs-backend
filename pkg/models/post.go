@@ -2,9 +2,12 @@ package models
 
 import (
 	"time"
+
+	"gorm.io/gorm"
 )
 
 type PostModel struct {
+	gorm.Model
 	ID        string       `gorm:"primaryKey;column:id"`
 	Title     string       `gorm:"column:title"`
 	Content   string       `gorm:"column:content"`

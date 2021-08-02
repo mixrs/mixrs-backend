@@ -1,6 +1,8 @@
 package comment
 
 import (
+	"encoding/base64"
+
 	"github.com/Tak1za/mixr/pkg/dbaccess"
 	"github.com/Tak1za/mixr/pkg/models"
 	uuid "github.com/satori/go.uuid"
@@ -55,6 +57,7 @@ func (s *Service) GetComments(postId string) ([]*models.CommentDTO, error) {
 				ID:    v.UserID,
 				Name:  v.UserName,
 				Email: v.UserEmail,
+				Image: base64.StdEncoding.EncodeToString(v.UserImage),
 			},
 		}
 
