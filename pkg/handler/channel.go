@@ -1,6 +1,8 @@
 package handler
 
 import (
+	"bytes"
+	"io"
 	"log"
 	"net/http"
 
@@ -9,12 +11,34 @@ import (
 )
 
 func (h *Handler) CreateChannel(c *gin.Context) {
-	var channel models.CreateChannelDTO
-
-	if err := c.ShouldBindJSON(&channel); err != nil {
+	channelTitle := c.PostForm("title")
+	channelDescription := c.PostForm("description")
+	channelImage, err := c.FormFile("avatar")
+	if err != nil {
 		log.Println(err)
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
+	}
+
+	file, err := channelImage.Open()
+	if err != nil {
+		log.Println(err)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	defer file.Close()
+
+	buf := bytes.NewBuffer(nil)
+	if _, err := io.Copy(buf, file); err != nil {
+		log.Println(err)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	channel := models.CreateChannelDTO{
+		Title:       channelTitle,
+		Description: channelDescription,
+		Image:       buf.Bytes(),
 	}
 
 	channelId, err := h.ChannelOperations.CreateChannel(&channel)

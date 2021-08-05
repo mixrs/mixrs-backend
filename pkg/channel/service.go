@@ -1,6 +1,8 @@
 package channel
 
 import (
+	"encoding/base64"
+
 	"github.com/Tak1za/mixr/pkg/dbaccess"
 	"github.com/Tak1za/mixr/pkg/models"
 	uuid "github.com/satori/go.uuid"
@@ -21,6 +23,7 @@ func (s *Service) CreateChannel(channel *models.CreateChannelDTO) (string, error
 		ID:          uuid.NewV4().String(),
 		Title:       channel.Title,
 		Description: channel.Description,
+		Image:       channel.Image,
 	}
 
 	channelId, err := s.Dbo.CreateChannel(newChannel)
@@ -37,10 +40,13 @@ func (s *Service) GetChannel(id string) (*models.ChannelDTO, error) {
 		return nil, err
 	}
 
+	encodedImage := base64.StdEncoding.EncodeToString(fetchedChannel.Image)
+
 	return &models.ChannelDTO{
 		ID:          fetchedChannel.ID,
 		Title:       fetchedChannel.Title,
 		Description: fetchedChannel.Description,
+		Image:       encodedImage,
 	}, nil
 }
 
@@ -52,10 +58,12 @@ func (s *Service) GetChannels() ([]*models.ChannelDTO, error) {
 
 	var res []*models.ChannelDTO
 	for _, v := range channels {
+		encodedImage := base64.StdEncoding.EncodeToString(v.Image)
 		item := &models.ChannelDTO{
 			ID:          v.ID,
 			Title:       v.Title,
 			Description: v.Description,
+			Image:       encodedImage,
 		}
 
 		res = append(res, item)
