@@ -5,6 +5,7 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"strings"
 
 	"github.com/Tak1za/mixr/pkg/models"
 	"github.com/gin-gonic/gin"
@@ -13,7 +14,9 @@ import (
 func (h *Handler) CreateChannel(c *gin.Context) {
 	channelTitle := c.PostForm("title")
 	channelDescription := c.PostForm("description")
+	channelTags := c.PostForm("tags")
 	channelImage, err := c.FormFile("avatar")
+
 	if err != nil {
 		log.Println(err)
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -39,6 +42,7 @@ func (h *Handler) CreateChannel(c *gin.Context) {
 		Title:       channelTitle,
 		Description: channelDescription,
 		Image:       buf.Bytes(),
+		Tags:        strings.Split(channelTags, ","),
 	}
 
 	createdChannel, err := h.ChannelOperations.CreateChannel(&channel)

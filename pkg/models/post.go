@@ -33,16 +33,13 @@ type PostDTO struct {
 }
 
 type FetchPostModel struct {
-	ID                 string    `gorm:"column:id"`
-	Title              string    `gorm:"column:title"`
-	Content            string    `gorm:"column:content"`
-	CreatedAt          time.Time `gorm:"column:created_at"`
-	UpdatedAt          time.Time `gorm:"column:updated_at"`
-	ChannelID          string    `gorm:"column:channel_id"`
-	ChannelTitle       string    `gorm:"column:channel_title"`
-	ChannelDescription string    `gorm:"column:channel_description"`
-	UserID             string    `gorm:"column:user_id"`
-	UserName           string    `gorm:"column:user_name"`
-	UserEmail          string    `gorm:"column:user_email"`
-	UserImage          []byte    `gorm:"column:user_image"`
+	ID        string    `gorm:"column:id"`
+	Title     string    `gorm:"column:title"`
+	Content   string    `gorm:"column:content"`
+	CreatedAt time.Time `gorm:"column:created_at"`
+	UpdatedAt time.Time `gorm:"column:updated_at"`
+	UserID    string    `gorm:"column:user_id"`
+	UserName  string    `gorm:"column:user_name"`
+	UserEmail string    `gorm:"column:user_email"`
+	UserImage []byte    `gorm:"column:user_image"`
 }
