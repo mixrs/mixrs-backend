@@ -9,7 +9,7 @@ import (
 )
 
 type Operations interface {
-	CreatePost(post *models.CreatePostDTO, channelId string) (string, error)
+	CreatePost(post *models.CreatePostDTO, channelId string) (*models.PostDTO, error)
 	GetPosts(channelId string) ([]*models.PostDTO, error)
 	GetPostById(channelId, postId string) (*models.PostDTO, error)
 }
@@ -18,7 +18,7 @@ type Service struct {
 	Dbo dbaccess.Operations
 }
 
-func (s *Service) CreatePost(post *models.CreatePostDTO, channelId string) (string, error) {
+func (s *Service) CreatePost(post *models.CreatePostDTO, channelId string) (*models.PostDTO, error) {
 	newPost := &models.PostModel{
 		ID:        uuid.NewV4().String(),
 		Title:     post.Title,
@@ -27,12 +27,21 @@ func (s *Service) CreatePost(post *models.CreatePostDTO, channelId string) (stri
 		ChannelID: channelId,
 	}
 
-	postId, err := s.Dbo.CreatePost(newPost)
+	createdPost, err := s.Dbo.CreatePost(newPost)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 
-	return postId, nil
+	return &models.PostDTO{
+		ID:        createdPost.ID,
+		Title:     createdPost.Title,
+		Content:   createdPost.Content,
+		UpdatedAt: createdPost.UpdatedAt,
+		CreatedAt: createdPost.CreatedAt,
+		User: &models.UserDTO{
+			ID: createdPost.UserID,
+		},
+	}, nil
 }
 
 func (s *Service) GetPosts(channelId string) ([]*models.PostDTO, error) {
@@ -53,10 +62,6 @@ func (s *Service) GetPosts(channelId string) ([]*models.PostDTO, error) {
 			Content:   v.Content,
 			UpdatedAt: v.UpdatedAt,
 			CreatedAt: v.CreatedAt,
-			Channel: &models.ChannelDTO{
-				ID:    v.ChannelID,
-				Title: v.ChannelTitle,
-			},
 			User: &models.UserDTO{
 				ID:    v.UserID,
 				Name:  v.UserName,
@@ -87,11 +92,6 @@ func (s *Service) GetPostById(channelId, postId string) (*models.PostDTO, error)
 		Content:   post.Content,
 		UpdatedAt: post.UpdatedAt,
 		CreatedAt: post.CreatedAt,
-		Channel: &models.ChannelDTO{
-			ID:          post.ChannelID,
-			Title:       post.ChannelTitle,
-			Description: post.ChannelDescription,
-		},
 		User: &models.UserDTO{
 			ID:    post.UserID,
 			Name:  post.UserName,

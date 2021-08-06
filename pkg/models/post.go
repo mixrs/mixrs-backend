@@ -24,13 +24,12 @@ type CreatePostDTO struct {
 }
 
 type PostDTO struct {
-	ID        string      `json:"id"`
-	Title     string      `json:"title"`
-	Content   string      `json:"content"`
-	UpdatedAt time.Time   `json:"updatedAt"`
-	CreatedAt time.Time   `json:"createdAt"`
-	Channel   *ChannelDTO `json:"channel"`
-	User      *UserDTO    `json:"user"`
+	ID        string    `json:"id"`
+	Title     string    `json:"title"`
+	Content   string    `json:"content"`
+	UpdatedAt time.Time `json:"updatedAt"`
+	CreatedAt time.Time `json:"createdAt"`
+	User      *UserDTO  `json:"user"`
 }
 
 type FetchPostModel struct {

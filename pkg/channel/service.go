@@ -9,7 +9,7 @@ import (
 )
 
 type Operations interface {
-	CreateChannel(channel *models.CreateChannelDTO) (string, error)
+	CreateChannel(channel *models.CreateChannelDTO) (*models.ChannelDTO, error)
 	GetChannel(id string) (*models.ChannelDTO, error)
 	GetChannels() ([]*models.ChannelDTO, error)
 }
@@ -18,7 +18,7 @@ type Service struct {
 	Dbo dbaccess.Operations
 }
 
-func (s *Service) CreateChannel(channel *models.CreateChannelDTO) (string, error) {
+func (s *Service) CreateChannel(channel *models.CreateChannelDTO) (*models.ChannelDTO, error) {
 	newChannel := &models.ChannelModel{
 		ID:          uuid.NewV4().String(),
 		Title:       channel.Title,
@@ -26,12 +26,17 @@ func (s *Service) CreateChannel(channel *models.CreateChannelDTO) (string, error
 		Image:       channel.Image,
 	}
 
-	channelId, err := s.Dbo.CreateChannel(newChannel)
+	createdChannel, err := s.Dbo.CreateChannel(newChannel)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 
-	return channelId, nil
+	return &models.ChannelDTO{
+		ID:          createdChannel.ID,
+		Title:       createdChannel.Title,
+		Description: createdChannel.Description,
+		Image:       base64.StdEncoding.EncodeToString(createdChannel.Image),
+	}, nil
 }
 
 func (s *Service) GetChannel(id string) (*models.ChannelDTO, error) {
@@ -54,6 +59,10 @@ func (s *Service) GetChannels() ([]*models.ChannelDTO, error) {
 	channels, err := s.Dbo.GetChannels()
 	if err != nil {
 		return nil, err
+	}
+
+	if channels == nil {
+		return []*models.ChannelDTO{}, nil
 	}
 
 	var res []*models.ChannelDTO

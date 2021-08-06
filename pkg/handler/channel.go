@@ -41,13 +41,13 @@ func (h *Handler) CreateChannel(c *gin.Context) {
 		Image:       buf.Bytes(),
 	}
 
-	channelId, err := h.ChannelOperations.CreateChannel(&channel)
+	createdChannel, err := h.ChannelOperations.CreateChannel(&channel)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
-	c.JSON(http.StatusCreated, gin.H{"id": channelId})
+	c.JSON(http.StatusCreated, gin.H{"data": createdChannel})
 }
 
 func (h *Handler) GetChannel(c *gin.Context) {

@@ -2,9 +2,9 @@ package models
 
 type UserDTO struct {
 	ID    string `json:"id"`
-	Name  string `json:"name"`
-	Email string `json:"email"`
-	Image string `json:"image"`
+	Name  string `json:"name,omitempty"`
+	Email string `json:"email,omitempty"`
+	Image string `json:"image,omitempty"`
 }
 
 type CreateUserDTO struct {

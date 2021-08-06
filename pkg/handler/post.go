@@ -19,13 +19,13 @@ func (h *Handler) CreatePost(c *gin.Context) {
 
 	channelId := c.Param("channelId")
 
-	postId, err := h.PostOperations.CreatePost(&post, channelId)
+	createdPost, err := h.PostOperations.CreatePost(&post, channelId)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
-	c.JSON(http.StatusCreated, gin.H{"id": postId})
+	c.JSON(http.StatusCreated, gin.H{"data": createdPost})
 }
 
 func (h *Handler) GetPosts(c *gin.Context) {

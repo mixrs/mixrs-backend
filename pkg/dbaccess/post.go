@@ -9,18 +9,18 @@ import (
 )
 
 type PostRepository interface {
-	CreatePost(post *models.PostModel) (string, error)
+	CreatePost(post *models.PostModel) (*models.PostModel, error)
 	GetPosts(channelId string) ([]*models.FetchPostModel, error)
 	GetPostById(channelId, postId string) (*models.FetchPostModel, error)
 }
 
-func (e *Env) CreatePost(post *models.PostModel) (string, error) {
+func (e *Env) CreatePost(post *models.PostModel) (*models.PostModel, error) {
 	if err := e.DB.Model(&models.PostModel{}).Create(post).Error; err != nil {
 		log.Println(err.Error())
-		return "", errors.New("error occured while creating post")
+		return nil, errors.New("error occured while creating post")
 	}
 
-	return post.ID, nil
+	return post, nil
 }
 
 func (e *Env) GetPosts(channelId string) ([]*models.FetchPostModel, error) {

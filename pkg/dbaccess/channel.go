@@ -10,18 +10,18 @@ import (
 )
 
 type ChannelRepository interface {
-	CreateChannel(channel *models.ChannelModel) (string, error)
+	CreateChannel(channel *models.ChannelModel) (*models.ChannelModel, error)
 	GetChannel(id string) (*models.FetchChannelModel, error)
 	GetChannels() ([]*models.FetchChannelModel, error)
 }
 
-func (e *Env) CreateChannel(channel *models.ChannelModel) (string, error) {
+func (e *Env) CreateChannel(channel *models.ChannelModel) (*models.ChannelModel, error) {
 	if err := e.DB.Model(&models.ChannelModel{}).Create(channel).Error; err != nil {
 		log.Println(err.Error())
-		return "", errors.New("error occured while creating channel")
+		return nil, errors.New("error occured while creating channel")
 	}
 
-	return channel.ID, nil
+	return channel, nil
 }
 
 func (e *Env) GetChannel(id string) (*models.FetchChannelModel, error) {
